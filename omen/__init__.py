@@ -7,14 +7,15 @@ from nltk.tokenize.moses import MosesDetokenizer
 
 class Omen():
     def __init__(self, state_size=3):
-        self.detokenizer = MosesDetokenizer()
-
         self.start_token = "@@_START_TOKEN_@@"
         self.end_token = "@@_END_TOKEN_@@"
         self.state_size = state_size
 
         self.states = defaultdict(lambda: defaultdict(int))
         self.beginnings = defaultdict(int)
+
+    def detokenize(self, tokens):
+        return MosesDetokenizer().detokenize(tokens, return_str=True)
 
     @staticmethod
     def weighted_choice(words):
@@ -59,4 +60,4 @@ class Omen():
             next_word = Omen.weighted_choice(self.states[state])
             tokens.append(next_word)
 
-        return self.detokenizer.detokenize(tokens[1:-1], return_str=True)
+        return self.detokenize(tokens[1:-1])
