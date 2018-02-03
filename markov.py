@@ -24,16 +24,16 @@ def build_model(corpus):
     for sentence in sentences:
         beginnings[tuple(sentence[:STATE_SIZE])] += 1
         for index, word in enumerate(sentence):
-            key = tuple(sentence[index - STATE_SIZE:index])
-            states[key][word] += 1
+            state = tuple(sentence[index - STATE_SIZE:index])
+            states[state][word] += 1
     return states, beginnings
 
 def generate(states, beginnings):
     tokens = list(weighted_choice(beginnings))
     curr = tokens[-1]
     while curr != END:
-        key = tuple(tokens[-STATE_SIZE:])
-        curr = weighted_choice(states[key])
+        state = tuple(tokens[-STATE_SIZE:])
+        curr = weighted_choice(states[state])
         tokens.append(curr)
 
     detokenizer = MosesDetokenizer()
