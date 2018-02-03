@@ -1,16 +1,17 @@
 import random
-import nltk
 from collections import defaultdict
 import dill as pickle
+import nltk
 from nltk.tokenize.moses import MosesDetokenizer
 
-detokenizer = MosesDetokenizer()
 
 class Omen():
     def __init__(self, state_size=3):
-        self.START_TOKEN = "@@_START_TOKEN_@@"
-        self.END_TOKEN = "@@_END_TOKEN_@@"
-        self.STATE_SIZE = state_size
+        self.detokenizer = MosesDetokenizer()
+
+        self.start_token = "@@_START_TOKEN_@@"
+        self.end_token = "@@_END_TOKEN_@@"
+        self.state_size = state_size
 
         self.states = defaultdict(lambda: defaultdict(int))
         self.beginnings = defaultdict(int)
@@ -25,37 +26,37 @@ class Omen():
 
     def dump_states(self, file):
         pickle.dump({
-            "START_TOKEN": self.START_TOKEN,
-            "END_TOKEN": self.END_TOKEN,
-            "STATE_SIZE": self.STATE_SIZE,
+            "start_token": self.start_token,
+            "end_token": self.end_token,
+            "state_size": self.state_size,
             "states": self.states,
             "beginnings": self.beginnings
         }, file)
 
     def load_states(self, file):
         states = pickle.load(file)
-        self.START_TOKEN = states["START_TOKEN"]
-        self.END_TOKEN = states["END_TOKEN"]
-        self.STATE_SIZE = states["STATE_SIZE"]
+        self.start_token = states["start_token"]
+        self.end_token = states["end_token"]
+        self.state_size = states["state_size"]
         self.states = states["states"]
         self.beginnings = states["beginnings"]
 
     def train(self, corpus):
         sentences = nltk.sent_tokenize(corpus)
-        sentences = [[self.START_TOKEN, *nltk.word_tokenize(sentence), self.END_TOKEN] for sentence in sentences]
+        sentences = [[self.start_token, *nltk.word_tokenize(sentence), self.end_token] for sentence in sentences]
 
         for sentence in sentences:
-            self.beginnings[tuple(sentence[:self.STATE_SIZE])] += 1
+            self.beginnings[tuple(sentence[:self.state_size])] += 1
             for index, word in enumerate(sentence):
-                state = tuple(sentence[index - self.STATE_SIZE:index])
+                state = tuple(sentence[index - self.state_size:index])
                 self.states[state][word] += 1
 
     def generate(self):
         tokens = list(Omen.weighted_choice(self.beginnings))
         next_word = tokens[-1]
-        while next_word != self.END_TOKEN:
-            state = tuple(tokens[-self.STATE_SIZE:])
+        while next_word != self.end_token:
+            state = tuple(tokens[-self.state_size:])
             next_word = Omen.weighted_choice(self.states[state])
             tokens.append(next_word)
-        
-        return detokenizer.detokenize(tokens[1:-1], return_str=True)
+
+        return self.detokenizer.detokenize(tokens[1:-1], return_str=True)
