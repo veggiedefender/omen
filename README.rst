@@ -51,16 +51,18 @@ body of text:
 Configuration
 #############
 
-Specify state size (higher sizes produce more coherent but less original sentences):
+Specify state size (defaults to 3. Higher sizes produce sentences that are more coherent but less original; you need more
+training data the higher you set the state size):
 
 >>> omen = Omen(state_size=2)
 
-Customize detokenizer
+Custom detokenizer (defaults to `Moses detokenizer`_):
 
 >>> omen.detokenize = lambda x: " $$$ ".join(x)
 >>> omen.generate()
 '`` $$$ But $$$ you $$$ can $$$ not $$$ be $$$ , $$$ sir $$$ , $$$ that $$$ I $$$ desired $$$ perfection $$$ , $$$ either $$$ of $$$ mind $$$ or $$$ person $$$ .'
 
+.. _Moses Detokenizer: http://www.nltk.org/api/nltk.tokenize.html#nltk.tokenize.moses.MosesDetokenizer
 Project Gutenberg license
 #########################
 ::
