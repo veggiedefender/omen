@@ -2,7 +2,7 @@
 Omen
 ****
 I'm experimenting with markov chains, so this code prioritizes readability over performance. Perhaps it can be of use for you.
-It uses `nltk` for tokenization and detokenization, since the focus is on the markov chain itself, rather than the yak shaving.
+It uses `nltk` for tokenization and detokenization, since the focus is on the markov chain itself, not than the yak shaving.
 
 The repo includes a sample corpus: the complete text of Charlotte Brontë's *Jane Eyre*, downloaded from
 `Project Gutenberg`_. Project Gutenberg license below.
@@ -13,7 +13,7 @@ Results
 #######
     They betray an unfortunate state of mind: they merit severe reproof: they would rise, and pass all my time in the nursery, and feared to find death.
 
-    Half reclined on a couch appeared Mr. Rochester, ``if you do not inquire why Mr. Briggs sought after you—what he wanted with you.
+    Half reclined on a couch appeared Mr. Rochester, \`\`if you do not inquire why Mr. Briggs sought after you—what he wanted with you.
 
     You say truly; but no coldness, and no further reference made to it by two broad steps, and looking through, I thought Moor House as complete a model of elderly English respectability.
 
@@ -60,9 +60,10 @@ Custom detokenizer (defaults to `Moses detokenizer`_):
 
 >>> omen.detokenize = lambda x: " $$$ ".join(x)
 >>> omen.generate()
-'`` $$$ But $$$ you $$$ can $$$ not $$$ be $$$ , $$$ sir $$$ , $$$ that $$$ I $$$ desired $$$ perfection $$$ , $$$ either $$$ of $$$ mind $$$ or $$$ person $$$ .'
+But $$$ you $$$ can $$$ not $$$ be $$$ , $$$ sir $$$ , $$$ that $$$ I $$$ desired $$$ perfection $$$ , $$$ either $$$ of $$$ mind $$$ or $$$ person $$$ .'
 
 .. _Moses Detokenizer: http://www.nltk.org/api/nltk.tokenize.html#nltk.tokenize.moses.MosesDetokenizer
+
 Project Gutenberg license
 #########################
 ::
