@@ -1,6 +1,7 @@
 import random
 import nltk
 from collections import defaultdict
+import dill as pickle
 from nltk.tokenize.moses import MosesDetokenizer
 
 detokenizer = MosesDetokenizer()
@@ -21,6 +22,23 @@ class Omen():
             number -= weight
             if number < 0:
                 return key
+
+    def dump_states(self, file):
+        pickle.dump({
+            "START_TOKEN": self.START_TOKEN,
+            "END_TOKEN": self.END_TOKEN,
+            "STATE_SIZE": self.STATE_SIZE,
+            "states": self.states,
+            "beginnings": self.beginnings
+        }, file)
+
+    def load_states(self, file):
+        states = pickle.load(file)
+        self.START_TOKEN = states["START_TOKEN"]
+        self.END_TOKEN = states["END_TOKEN"]
+        self.STATE_SIZE = states["STATE_SIZE"]
+        self.states = states["states"]
+        self.beginnings = states["beginnings"]
 
     def train(self, corpus):
         sentences = nltk.sent_tokenize(corpus)

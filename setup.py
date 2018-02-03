@@ -14,7 +14,7 @@ setup(name='omen',
       author_email='jessejesse123@gmail.com',
       license='MIT',
       packages=['omen'],
-      install_requires=['nltk'],
+      install_requires=['nltk', 'dill'],
       setup_requires=['nltk'],
       zip_safe=True)
 
