@@ -14,26 +14,32 @@ def weighted_choice(words):
         if number < 0:
             return key
 
+def build_model(corpus):
+    sentences = nltk.sent_tokenize(corpus)
+    sentences = [[START, *nltk.word_tokenize(sentence), END] for sentence in sentences]
+
+    states = defaultdict(lambda: defaultdict(int))
+    beginnings = defaultdict(int)
+
+    for sentence in sentences:
+        beginnings[tuple(sentence[:STATE_SIZE])] += 1
+        for index, word in enumerate(sentence):
+            key = tuple(sentence[index - STATE_SIZE:index])
+            states[key][word] += 1
+    return states, beginnings
+
+def generate(states, beginnings):
+    tokens = list(weighted_choice(beginnings))
+    curr = tokens[-1]
+    while curr != END:
+        key = tuple(tokens[-STATE_SIZE:])
+        curr = weighted_choice(states[key])
+        tokens.append(curr)
+
+    detokenizer = MosesDetokenizer()
+    return detokenizer.detokenize(tokens[1:-1], return_str=True)
+
 with open("corpus.txt") as f:
     corpus = f.read()
 
-sentences = nltk.sent_tokenize(corpus)
-sentences = [[START, *nltk.word_tokenize(sentence), END] for sentence in sentences]
-
-states = defaultdict(lambda: defaultdict(int))
-beginnings = []
-for sentence in sentences:
-    beginnings.append(tuple(sentence[:STATE_SIZE]))
-    for index, word in enumerate(sentence):
-        key = tuple(sentence[index - STATE_SIZE:index])
-        states[key][word] += 1
-
-tokens = list(random.choice(beginnings))
-curr = tokens[-1]
-while curr != END:
-    key = tuple(tokens[-STATE_SIZE:])
-    curr = weighted_choice(states[key])
-    tokens.append(curr)
-
-detokenizer = MosesDetokenizer()
-print(detokenizer.detokenize(tokens[1:-1], return_str=True))
+print(generate(*build_model(corpus)))
