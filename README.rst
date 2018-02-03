@@ -40,6 +40,14 @@ Usage
 >>> omen.generate()
 "A quarter of an hour's length, in which I communicated it: yet six months after he wrote to me of a Jane Eyre: I have been, for none of the Reeds were there, they say, almost like a dog quarrelling."
 
+Note that due to the Markov chain's structure, the model may be trained online over multiple corpora as if they were a single
+body of text:
+
+>>> omen.train(open("jane_eyre.txt").read())
+>>> omen.train(open("twenty_thousand_leagues.txt").read())
+>>> omen.generate()
+'Last night I can not say it with his harpoon, a dreadful weapon in his hands.'
+
 Configuration
 #############
 
