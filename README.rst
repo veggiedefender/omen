@@ -2,7 +2,7 @@
 Omen
 ****
 I'm experimenting with markov chains, so this code prioritizes readability over performance. Perhaps it can be of use for you.
-It uses `nltk` for tokenization and detokenization, since the focus is on the markov chain itself, not than the yak shaving.
+It uses ``nltk`` for tokenization and detokenization, since the focus is on the markov chain itself, not than the yak shaving.
 
 The repo includes a sample corpus: the complete text of Charlotte Brontë's *Jane Eyre*, downloaded from
 `Project Gutenberg`_. Project Gutenberg license below.
@@ -56,13 +56,25 @@ training data the higher you set the state size):
 
 >>> omen = Omen(state_size=2)
 
-Custom detokenizer (defaults to `Moses detokenizer`_):
+Overriding functions:
+*********************
 
+You may override the following functions:
+
+- ``sentence_tokenize``
+- ``word_tokenize``
+- ``detokenize``
+- ``weighted_choice`` (I'm not sure why you would want to override this function, but the option's there)
+
+Example:
+
+>>> import omen
+>>> o = omen.Omen()
+>>> o.train(open("corpus.txt").read())
+>>>
 >>> omen.detokenize = lambda x: " $$$ ".join(x)
->>> omen.generate()
+>>> o.generate()
 But $$$ you $$$ can $$$ not $$$ be $$$ , $$$ sir $$$ , $$$ that $$$ I $$$ desired $$$ perfection $$$ , $$$ either $$$ of $$$ mind $$$ or $$$ person $$$ .'
-
-.. _Moses Detokenizer: http://www.nltk.org/api/nltk.tokenize.html#nltk.tokenize.moses.MosesDetokenizer
 
 Project Gutenberg license
 #########################

@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name='omen',
-      version='1.3',
+      version='1.4',
       description='Simple markov chain library',
       long_description=readme(),
       keywords='markov chain nlp',
